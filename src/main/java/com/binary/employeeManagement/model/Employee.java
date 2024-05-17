@@ -4,6 +4,7 @@ import lombok.*;
 
 @Data
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Employee {

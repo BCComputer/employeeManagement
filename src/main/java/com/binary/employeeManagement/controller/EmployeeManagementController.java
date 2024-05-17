@@ -5,32 +5,45 @@ import com.binary.employeeManagement.services.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/employees")
 @RequiredArgsConstructor
 public class EmployeeManagementController {
     private final EmployeeService employeeService;
-    @GetMapping({"employee/list"})
+
+    @GetMapping({"", "/list"})
     public String employee(Model m) {
-        m.addAttribute("employees", employeeService.findAllEmployee());
-        return "displayEmployee";
+        m.addAttribute("employeesList", employeeService.findAllEmployee());
+        return "employees/displayEmployeePage";
     }
 
-    @GetMapping({"employee/create"})
-    public String createEmployee(Model model){
+    @GetMapping({"/create"})
+    public String createEmployee(Model model) {
         model.addAttribute("createEmployee", new Employee());
-        return "/createEmployeePage";
+        return "employees/createEmployeePage";
+    }
+
+    @PostMapping({"/create"})
+    public String createEmployee(@ModelAttribute("createEmployee") Employee employee) {
+        employeeService.addEmployee(employee);
+        return "redirect:/employees/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deletePostPage(@PathVariable("id") Integer id) {
+        return "employees/deleteEmployeePage";
+    }
+
+    @PostMapping({"/delete/{id}"})
+    public String deleteEmployee(@PathVariable("id") Integer id) {
+        employeeService.deleteEmployeeById(id);
+        return "redirect:/employees/list";
     }
 
 
-    /*@GetMapping({"/emp"})
-    public String employee1() {
-        return "employees";
-    }*/
+
 }
 
 

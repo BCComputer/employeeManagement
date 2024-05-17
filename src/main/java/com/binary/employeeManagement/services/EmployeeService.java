@@ -18,4 +18,8 @@ public class EmployeeService {
     public List<Employee> findAllEmployee() {
        return repo.getAllEmployees();
     }
+    public List<Employee> deleteEmployeeById(int id){
+        return repo.deleteEmployeeById(id);
+
+    }
 }
