@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class EmployeeService {
@@ -20,6 +22,13 @@ public class EmployeeService {
     }
     public List<Employee> deleteEmployeeById(int id){
         return repo.deleteEmployeeById(id);
+
+    }
+    public Optional<Employee> findById(int id){
+        return repo.getEmpById(id);
+    }
+    public void updateEmployee(Employee employee){
+        repo.updateEmployee(employee);
 
     }
 }
