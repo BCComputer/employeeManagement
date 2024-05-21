@@ -6,29 +6,14 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
-public class EmployeeRepo {
+public class EmployeeRepo{
 
     List<Employee> empList = new ArrayList<>();
     private Integer id = 0;
 
     public EmployeeRepo() {
-        /*Employee employee1 = new Employee();
-        employee1.setId(id);
-        employee1.setName("Bishnu");
-        employee1.setRole("Dev");
-        employee1.setDepartment("Eng");
-
-        Employee employee2 = new Employee();
-        employee2.setId(id);
-        employee2.setName("Ram");
-        employee2.setRole("HR");
-        employee2.setDepartment("Accounts");
-        empList.add(employee1);
-        empList.add(employee2);
-    }*/
     }
     public void addEmployee(Employee employee) {
         employee.setId(id);
