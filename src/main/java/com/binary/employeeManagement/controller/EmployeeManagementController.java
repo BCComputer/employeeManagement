@@ -3,12 +3,12 @@ package com.binary.employeeManagement.controller;
 import com.binary.employeeManagement.model.Employee;
 import com.binary.employeeManagement.model.EmployeeDto;
 import com.binary.employeeManagement.repositories.EmployeeRepositories;
+import com.binary.employeeManagement.services.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/employees")
 @RequiredArgsConstructor
 public class EmployeeManagementController {
-    private final EmployeeRepositories repositories;
+    private final EmployeeService employeeService;
     @GetMapping({"", "/list"})
     public String employee(Model m) {
-        m.addAttribute("employeesList", repositories.findAll());
+        m.addAttribute("employeesList", employeeService.findAll());
         return "employees/displayEmployeePage";
     }
     @GetMapping({"/home"})
@@ -34,7 +34,6 @@ public class EmployeeManagementController {
         model.addAttribute("createEmployee", new EmployeeDto());
         return "employees/createEmployeePage";
     }
-
     @PostMapping({"/create"})
     public String createEmployee(@Valid @ModelAttribute("createEmployee")
                                      EmployeeDto employeeDto, BindingResult result) {
@@ -42,14 +41,11 @@ public class EmployeeManagementController {
             return "employees/createEmployeePage";
         }
         Employee employee = new Employee();
-
         employee.setName(employeeDto.getName());
         employee.setRole(employeeDto.getRole());
         employee.setDepartment(employeeDto.getDepartment());
         employee.setSalary(employeeDto.getSalary());
-        repositories.save(employee);
-
-
+        employeeService.save(employee);
         return "redirect:/employees/list";
     }
 
@@ -60,15 +56,16 @@ public class EmployeeManagementController {
     }
     @PostMapping({"/delete/{id}"})
     public String deleteEmployee(@PathVariable("id") int id) {
-        Employee byId = repositories.findById(id).get();
-        repositories.delete(byId);
+        Employee byId = employeeService.findById(id).get();
+        employeeService.delete(byId);
         return "redirect:/employees/list";
     }
 
     @GetMapping("/updateEmployee/{id}")
     public String updateEmployee(@PathVariable("id") int id, Model model) {
 
-        Optional<Employee> optionalEmployee = repositories.findById(id);
+        Optional<Employee> optionalEmployee = employeeService.findById(id);
+
         Employee  updatedEmployee = null;
         if (optionalEmployee.isPresent()) {
             updatedEmployee = optionalEmployee.get();
@@ -92,7 +89,8 @@ public class EmployeeManagementController {
         employee.setRole(employeeDto.getRole());
         employee.setDepartment(employeeDto.getDepartment());
         employee.setSalary(employeeDto.getSalary());
-        repositories.save(employee);
+        employeeService.save(employee);
+
         return "redirect:/employees/list";
     }
 
@@ -100,7 +98,7 @@ public class EmployeeManagementController {
     public String search(@RequestParam(required = false) String searchBy,
                          @RequestParam(required = false) String keyword,
                          Model model) {
-        List<Employee> employees = repositories.findAll();
+        List<Employee> employees = employeeService.findAll();
 
         if (searchBy != null && !searchBy.isEmpty() && keyword != null && !keyword.isEmpty()) {
             switch (searchBy) {
